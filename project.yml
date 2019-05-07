@@ -1,0 +1,4 @@
+include:
+    - projects/base.yml
+    - projects/app.yml
+    - projects/settings.yml

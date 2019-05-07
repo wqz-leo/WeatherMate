@@ -1,0 +1,9 @@
+# Xcode
+#
+*.xcuserstate
+xcuserdata
+DerivedData
+
+# Generated project
+*.xcodeproj
+**.pbxproj

@@ -1,0 +1,17 @@
+targets:
+  WeatherMate:
+    sources:
+      - ../src/WeatherMate
+    platform: iOS
+    type: application
+    scheme:
+      environmentVariables:
+        - variable: OS_ACTIVITY_MODE
+          value: disable
+          isEnabled: false
+    settings:
+      base:
+        FRAMEWORK_SEARCH_PATHS: $(PROJECT_DIR)
+      group: [app]
+    dependencies:
+      - target: SDK

@@ -1,0 +1,13 @@
+name: WeatherMate
+settingsGroup:
+  app:
+    base:
+      APP_NAME: WeatherMate
+      PRODUCT_BUNDLE_IDENTIFIER: co.leo.wang.weather_mate
+      #DEVELOPMENT_TEAM: 77PYHN5987
+      APP_GROUP: group.co.leo.wang
+      CODE_SIGN_STYLE: Automatic
+options:
+   bundleIdPrefix: co.leo.wang
+   carthageExecutablePath: ./mint run carthage carthage
+   deploymentTarget: 10.0

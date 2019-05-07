@@ -1,0 +1,5 @@
+targets:
+  SDK:
+    sources: ../src/SDK
+    platform: iOS
+    type: framework
