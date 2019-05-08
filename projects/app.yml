@@ -14,4 +14,5 @@ targets:
         FRAMEWORK_SEARCH_PATHS: $(PROJECT_DIR)
       group: [app]
     dependencies:
-      - target: SDK
+      - target: WM_SDK
+      - target: WM_API

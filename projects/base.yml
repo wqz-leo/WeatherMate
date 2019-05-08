@@ -1,5 +1,11 @@
 targets:
-  SDK:
-    sources: ../src/SDK
+  WM_SDK:
+    sources: ../src/WM_SDK
     platform: iOS
     type: framework
+  WM_API:
+    sources: ../src/WM_API
+    platform: iOS
+    type: framework
+    dependencies:
+      - carthage: Alamofire
