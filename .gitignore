@@ -3,6 +3,8 @@
 *.xcuserstate
 xcuserdata
 DerivedData
+*/.DS_Store
+.DS_Store
 
 # Generated project
 *.xcodeproj
