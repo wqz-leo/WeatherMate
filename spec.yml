@@ -11,23 +11,205 @@ info:
   contact:
     email: wangqingzhouleo@gmail.com
     name: Leo Wang
+paths:
+  /box/city:
+    get:
+      operationId: getWeatherInRectZone
+      description: JSON returns the data from cities within the defined rectangle specified by the geographic coordinates.
+      tags:
+        - weather
+      parameters:
+        - name: bbox
+          in: query
+          description: bounding box [lon-left,lat-bottom,lon-right,lat-top,zoom]
+          schema:
+            type: array
+            items: 
+              type: integer
+              format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Coord"
+        "401":
+          description: Invalid api key.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+  /forecast/hourly:
+    get:
+      operationId: getHourlyForecast
+      description: Hourly forecast by OpenWeatherMap! Hourly forecast for 4 days, with 96 timestamps and higher geographic accuracy.
+      tags:
+        - forecast
+      parameters:
+        - $ref: "#/components/parameters/CityName"
+        - $ref: "#/components/parameters/CityID"
+        - $ref: "#/components/parameters/Latitude"
+        - $ref: "#/components/parameters/Longitude"
+        - $ref: "#/components/parameters/ZipCode"
+        - $ref: "#/components/parameters/Language"
+        - $ref: "#/components/parameters/Limitation"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Coord"
+        "401":
+          description: Invalid api key.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+  /forecast/daily:
+    get:
+      operationId: getDailyForecast
+      description: Up to 16 days forecast.
+      tags:
+        - forecast
+      parameters:
+        - $ref: "#/components/parameters/CityName"
+        - $ref: "#/components/parameters/CityID"
+        - $ref: "#/components/parameters/Latitude"
+        - $ref: "#/components/parameters/Longitude"
+        - $ref: "#/components/parameters/ZipCode"
+        - $ref: "#/components/parameters/Language"
+        - $ref: "#/components/parameters/Limitation"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Coord"
+        "401":
+          description: Invalid api key.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+  /weather:
+    get:
+      operationId: getWeather
+      description: Get weather data based on different query
+      tags:
+        - weather
+      parameters:
+        - $ref: "#/components/parameters/CityName"
+        - $ref: "#/components/parameters/CityID"
+        - $ref: "#/components/parameters/Latitude"
+        - $ref: "#/components/parameters/Longitude"
+        - $ref: "#/components/parameters/ZipCode"
+        - $ref: "#/components/parameters/Language"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Coord"
+        "401":
+          description: Invalid api key.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
 servers:
-  - url: api.openweathermap.org/data/{version}
-    description: The main end point for weather data.
-    variables:
-      version:
-        enum:
-          - '2.5'
-          - '3.0'
-        default: '2.5'
+  -url: /
+  # - url: api.openweathermap.org/data/{version}
+    # description: The main end point for weather data.
+    # variables:
+    #   version:
+    #     enum:
+    #       - '2.5'
+    #       - '3.0'
+    #     default: '2.5'
   # - url: maps.openweathermap.org/maps
   #   description: Weather map
 components:
-  securitySchemes:
-    api_key:
-      type: apiKey
-      name: appid
+  parameters:
+    CityName:
+      name: q
+      description: city name and country code divided by comma, use ISO 3166 country codes
       in: query
+      schema:
+        type: string
+    CityID:
+      name: id
+      description: >
+        You can call by city ID. API responds with exact result.
+
+        List of city ID city.list.json.gz can be downloaded here http://bulk.openweathermap.org/sample/
+      in: query
+      schema:
+        type: string
+    Language:
+      name: lang
+      description: You can use lang parameter to get the output in your language.
+      in: query
+      schema:
+        type: string
+    Latitude:
+      name: lat
+      description: Latitude of the location
+      in: query
+      schema:
+        type: string
+    Longitude:
+      name: lon
+      description: Longitude of the location
+      in: query
+      schema:
+        type: string
+    ZipCode:
+      name: zip
+      description: Zip code. Please note if country is not specified then the search works for USA as a default.
+      in: query
+      schema:
+        type: string
+    Limitation:
+      name: cnt
+      in: query
+      description: To limit number of listed cities please setup 'cnt' parameter that specifies the number of lines returned.
+      schema:
+        type: integer
+        format: int32
+        default: 12
+  # securitySchemes:
+  #   api_key:
+  #     type: apiKey
+  #     name: appid
+  #     in: query
   schemas:
     Coord:
       type: object
@@ -38,3 +220,18 @@ components:
         lat:
           type: number
           format: double
+    ServiceError:
+      emoji: 🔴
+      type: object
+      required:
+        - message
+      additionalProperties: false
+      properties:
+        message:
+          type: string
+          description: A description of the error.
+        code:
+          type: integer
+          format: int32
+          description: An optional code classifying the error. Should be taken in the
+            context of the http status code.

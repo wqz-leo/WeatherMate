@@ -151,6 +151,13 @@ To add support for a specific asynchronous library, just add an extension on `AP
 ## Models
 
 - **Coord**
+- **ServiceError**
 
 ## Requests
 
+- **WMAPI.Forecast**
+	- **GetDailyForecast**: GET `/forecast/daily`
+	- **GetHourlyForecast**: GET `/forecast/hourly`
+- **WMAPI.Weather**
+	- **GetWeather**: GET `/weather`
+	- **GetWeatherInRectZone**: GET `/box/city`
