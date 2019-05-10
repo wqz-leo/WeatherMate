@@ -24,7 +24,6 @@ options:
       version: 4.8.2
 templateFiles:
   - path: README.md
-  - path: Cartfile
   - path: Info.plist
   - path: Sources/API.swift
   - path: Sources/Coding.swift
@@ -36,8 +35,6 @@ templateFiles:
   - path: Sources/APIResult.swift
   - path: Sources/RequestBehaviour.swift
   - path: Sources/AnyCodable.swift
-  - path: Podspec.podspec
-    destination: "{{ options.name }}.podspec"
   - path: Sources/Enum.swift
     context: enums
     destination: "Sources/Enums/{{ enumName }}.swift"

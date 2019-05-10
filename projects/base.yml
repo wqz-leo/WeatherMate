@@ -12,5 +12,8 @@ targets:
     sources: ../src/WM_API
     platform: iOS
     type: framework
+    settings:
+      base:
+        FRAMEWORK_SEARCH_PATHS: $(PROJECT_DIR)
     dependencies:
       - carthage: Alamofire
