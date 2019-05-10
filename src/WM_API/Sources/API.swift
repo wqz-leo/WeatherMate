@@ -22,5 +22,10 @@ public struct WMAPI {
     public enum Forecast {}
     public enum Weather {}
 
-    // No servers defined in swagger. Documentation for adding them: https://swagger.io/specification/#schema
+    public enum Server {
+
+        public static let data = "https://api.openweathermap.org/data/2.5"
+
+        public static let maps = "http://maps.openweathermap.org/maps/2.0"
+    }
 }

@@ -145,7 +145,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/ServiceError"
 servers:
-  -url: /
+  - url: https://api.openweathermap.org/data/2.5
+    name: data
+  - url: http://maps.openweathermap.org/maps/2.0
+    name: maps
   # - url: api.openweathermap.org/data/{version}
     # description: The main end point for weather data.
     # variables:
