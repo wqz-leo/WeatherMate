@@ -24,7 +24,6 @@ options:
       version: 4.8.2
 templateFiles:
   - path: README.md
-  - path: Package.swift
   - path: Cartfile
   - path: Info.plist
   - path: Sources/API.swift
