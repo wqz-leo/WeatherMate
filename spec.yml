@@ -46,6 +46,55 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
+        default:
+          description: Service error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+      security:
+        - apiKey: []
+  /forecast:
+    get:
+      operationId: getThreeHourlyForecast
+      description: Forecast weather data every 3 hours up to 5 days.
+      tags:
+        - forecast
+      parameters:
+        - $ref: "#/components/parameters/CityName"
+        - $ref: "#/components/parameters/CityID"
+        - $ref: "#/components/parameters/Latitude"
+        - $ref: "#/components/parameters/Longitude"
+        - $ref: "#/components/parameters/ZipCode"
+        - $ref: "#/components/parameters/Language"
+        - $ref: "#/components/parameters/Count"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Coord"
+        "401":
+          description: Invalid api key.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+        "404":
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+        default:
+          description: Service error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+      security:
+        - apiKey: []
   /forecast/hourly:
     get:
       operationId: getHourlyForecast
@@ -59,7 +108,7 @@ paths:
         - $ref: "#/components/parameters/Longitude"
         - $ref: "#/components/parameters/ZipCode"
         - $ref: "#/components/parameters/Language"
-        - $ref: "#/components/parameters/Limitation"
+        - $ref: "#/components/parameters/Count"
       responses:
         "200":
           description: OK
@@ -79,6 +128,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
+        default:
+          description: Service error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+      security:
+        - apiKey: []
   /forecast/daily:
     get:
       operationId: getDailyForecast
@@ -92,7 +149,7 @@ paths:
         - $ref: "#/components/parameters/Longitude"
         - $ref: "#/components/parameters/ZipCode"
         - $ref: "#/components/parameters/Language"
-        - $ref: "#/components/parameters/Limitation"
+        - $ref: "#/components/parameters/Count"
       responses:
         "200":
           description: OK
@@ -112,9 +169,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
+        default:
+          description: Service error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+      security:
+        - apiKey: []
   /weather:
     get:
-      operationId: getWeather
+      operationId: getCurrentWeather
       description: Get weather data based on different query
       tags:
         - weather
@@ -144,6 +209,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
+        default:
+          description: Service error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceError"
+      security:
+        - apiKey: ["abcdefg"]
 servers:
   - url: https://api.openweathermap.org/data/2.5
     name: data
@@ -160,6 +233,11 @@ servers:
   # - url: maps.openweathermap.org/maps
   #   description: Weather map
 components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: apiKey
+      in: query
   parameters:
     CityName:
       name: q
@@ -176,6 +254,13 @@ components:
       in: query
       schema:
         type: string
+    Count:
+      name: cnt
+      description: To limit number of listed cities please setup 'cnt' parameter that specifies the number of lines returned.
+      in: query
+      schema:
+        type: integer
+        format: int32
     Language:
       name: lang
       description: You can use lang parameter to get the output in your language.
@@ -200,27 +285,205 @@ components:
       in: query
       schema:
         type: string
-    Limitation:
-      name: cnt
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: apiKey
       in: query
-      description: To limit number of listed cities please setup 'cnt' parameter that specifies the number of lines returned.
-      schema:
-        type: integer
-        format: int32
-        default: 12
-  # securitySchemes:
-  #   api_key:
-  #     type: apiKey
-  #     name: appid
-  #     in: query
   schemas:
+    City:
+      type: object
+      required:
+        - id
+        - name
+        - coord
+        - country
+      properties:
+        id:
+          description: City ID
+          type: integer
+          format: int32
+        name:
+          description: City name
+          type: string
+        coord:
+          $ref: "#/components/schemas/Coord"
+        country:
+          type: string
+    Clouds:
+      type: object
+      properties:
+        all:
+          description: Cloudiness, %
+          type: number
+          format: double
     Coord:
       type: object
+      required:
+        - lon
+        - lat
       properties:
         lon:
           type: number
           format: double
         lat:
+          type: number
+          format: double
+    CurrentWeather:
+      allOf:
+        - $ref: "#/components/schemas/WeatherSummary"
+        - type: object
+          required:
+            - coord
+            - weather
+            - main
+            - id
+            - name
+          properties:
+            coord:
+              description: City geo location
+              $ref: "#/components/schemas/Coord"
+            weather:
+              $ref: "#/components/schemas/Weather"
+            base:
+              description: Internal parameter
+              type: string
+            main:
+              $ref: "#/components/schemas/Main"
+            sys:
+              $ref: "#/components/schemas/Sys"
+            id:
+              description: City ID
+              type: integer
+              format: int32
+            name:
+              description: City name
+              type: string
+            cod:
+              description: Internal parameter
+              type: integer
+              format: int32
+    DailyForecast:
+      allOf:
+        - $ref: "#/components/schemas/ForecastSummary"
+        - type: object
+          required:
+            - list
+          properties:
+            list:
+              type: array
+              items:
+                $ref: "#/components/schemas/DailyWeathertItem"
+    DailyWeathertItem:
+      type: object
+      properties:
+        dt:
+          description: Time of data forecasted, unix, UTC
+          type: string
+          format: date-time
+        pressure:
+          description: Atmospheric pressure (on the sea level, if there is no sea_level or grnd_level data), hPa
+          type: number
+          format: double
+        humidity:
+          description: Humidity, %
+          type: number
+          format: double
+        weather:
+          type: array
+          items:
+            $ref: "#/components/schemas/Weather"
+        speed:
+          description: "Wind speed. Unit Default: meter/sec, Metric: meter/sec, Imperial: miles/hour."
+          type: number
+          format: double
+        deg:
+          description: Wind direction, degrees (meteorological)
+          type: number
+          format: double
+        clouds:
+          description: Cloudiness, %
+          type: number
+          format: double
+        rain:
+          description: Precipitation volume, mm
+          type: number
+          format: double
+        snow:
+          description: Snow volume, mm
+          type: number
+          format: double
+    HourlyForecast:
+      allOf:
+        - $ref: "#/components/schemas/ForecastSummary"
+        - type: object
+          required:
+            - list
+          properties:
+            list:
+              type: array
+              items:
+                $ref: "#/components/schemas/HourlyWeathertItem"
+    ForecastSummary:
+      type: object
+      properties:
+        cod:
+          type: string
+        message:
+          type: number
+          format: double
+        city:
+          $ref: "#/components/schemas/City"
+        cnt:
+          description: Number of lines returned by this API call
+          type: integer
+          format: int32
+    Main:
+      type: object
+      required:
+        - temp
+        - pressure
+        - temp_min
+        - temp_max
+        - humidity
+      properties:
+        temp:
+          description: "Temperature. Unit Default: Kelvin, Metric: Celsius, Imperial: Fahrenheit."
+          type: number
+          format: double
+        pressure:
+          description: Atmospheric pressure (on the sea level, if there is no sea_level or grnd_level data), hPa
+          type: number
+          format: double
+        humidity:
+          description: Humidity, %
+          type: number
+          format: double
+        temp_min:
+          description: "Minimum temperature at the moment. This is deviation from current temp that is possible for large cities and megalopolises geographically expanded (use these parameter optionally). Unit Default: Kelvin, Metric: Celsius, Imperial: Fahrenheit."
+          type: number
+          format: double
+        temp_max:
+          description: "Maximum temperature at the moment. This is deviation from current temp that is possible for large cities and megalopolises geographically expanded (use these parameter optionally). Unit Default: Kelvin, Metric: Celsius, Imperial: Fahrenheit."
+          type: number
+          format: double
+        sea_level:
+          description: Atmospheric pressure on the sea level, hPa
+          type: number
+          format: double
+        grnd_level:
+          description: Atmospheric pressure on the ground level, hPa
+          type: number
+          format: double
+    Rain:
+      type: object
+      properties:
+        1h:
+          description: Rain volume for the last 1 hour, mm
+          type: number
+          format: double
+        3h:
+          description: Rain volume for the last 3 hours, mm
           type: number
           format: double
     ServiceError:
@@ -238,3 +501,90 @@ components:
           format: int32
           description: An optional code classifying the error. Should be taken in the
             context of the http status code.
+    Snow:
+      type: object
+      properties:
+        1h:
+          description: Snow volume for the last 1 hour, mm
+          type: number
+          format: double
+        3h:
+          description: Snow volume for the last 3 hours, mm
+          type: number
+          format: double
+    Sys:
+      type: object
+      properties:
+        "type":
+          type: integer
+          format: int32
+        id:
+          type: integer
+          format: int32
+        message:
+          type: number
+          format: double
+        country:
+          type: string
+        sunrise:
+          type: number
+          format: double
+        sunset:
+          type: number
+          format: double
+    Weather:
+      type: object
+      properties:
+        id:
+          description: Weather condition id
+          type: integer
+          format: int32
+        main:
+          description: Group of weather parameters (Rain, Snow, Extreme etc.)
+          type: string
+        'description':
+          description: Weather condition within the group
+          type: string
+        icon:
+          description: Weather icon id
+          type: string
+    HourlyWeathertItem:
+      allOf:
+        - $ref: "#/components/schemas/WeatherSummary"
+        - type: object
+          required:
+            - weather
+            - main
+          properties:
+            main:
+              $ref: "#/components/schemas/Main"
+            weather:
+              type: array
+              items:
+                $ref: "#/components/schemas/Weather"
+    WeatherSummary:
+      type: object
+      properties:
+        wind:
+          $ref: "#/components/schemas/Wind"
+        clouds:
+          $ref: "#/components/schemas/Clouds"
+        rain:
+          $ref: "#/components/schemas/Rain"
+        snow:
+          $ref: "#/components/schemas/Snow"
+        dt:
+          description: Time of data calculation, unix, UTC
+          type: string
+          format: date-time
+    Wind:
+      type: object
+      properties:
+        speed:
+          description: "Wind speed. Unit Default: meter/sec, Metric: meter/sec, Imperial: miles/hour."
+          type: number
+          format: double
+        deg:
+          description: Wind direction, degrees (meteorological)
+          type: number
+          format: double

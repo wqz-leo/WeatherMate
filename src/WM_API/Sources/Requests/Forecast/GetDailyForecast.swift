@@ -10,7 +10,7 @@ extension WMAPI.Forecast {
     /** Up to 16 days forecast. */
     public enum GetDailyForecast {
 
-        public static let service = APIService<Response>(id: "getDailyForecast", tag: "forecast", method: "GET", path: "/forecast/daily", hasBody: false)
+        public static let service = APIService<Response>(id: "getDailyForecast", tag: "forecast", method: "GET", path: "/forecast/daily", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: []))
 
         public final class Request: APIRequest<Response> {
 
@@ -102,6 +102,9 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
             /** Not found. */
             case status404(ServiceError)
 
+            /** Service error. */
+            case defaultResponse(statusCode: Int, ServiceError)
+
             public var success: Coord? {
                 switch self {
                 case .status200(let response): return response
@@ -113,6 +116,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 switch self {
                 case .status401(let response): return response
                 case .status404(let response): return response
+                case .defaultResponse(_, let response): return response
                 default: return nil
                 }
             }
@@ -133,6 +137,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case .status200(let response): return response
                 case .status401(let response): return response
                 case .status404(let response): return response
+                case .defaultResponse(_, let response): return response
                 }
             }
 
@@ -141,6 +146,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case .status200: return 200
                 case .status401: return 401
                 case .status404: return 404
+                case .defaultResponse(let statusCode, _): return statusCode
                 }
             }
 
@@ -149,6 +155,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case .status200: return true
                 case .status401: return false
                 case .status404: return false
+                case .defaultResponse: return false
                 }
             }
 
@@ -157,7 +164,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case 200: self = try .status200(decoder.decode(Coord.self, from: data))
                 case 401: self = try .status401(decoder.decode(ServiceError.self, from: data))
                 case 404: self = try .status404(decoder.decode(ServiceError.self, from: data))
-                default: throw APIClientError.unexpectedStatusCode(statusCode: statusCode, data: data)
+                default: self = try .defaultResponse(statusCode: statusCode, decoder.decode(ServiceError.self, from: data))
                 }
             }
 

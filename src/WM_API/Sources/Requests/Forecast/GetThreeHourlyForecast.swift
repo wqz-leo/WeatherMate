@@ -5,12 +5,12 @@
 
 import Foundation
 
-extension WMAPI.Weather {
+extension WMAPI.Forecast {
 
-    /** Get weather data based on different query */
-    public enum GetWeather {
+    /** Forecast weather data every 3 hours up to 5 days. */
+    public enum GetThreeHourlyForecast {
 
-        public static let service = APIService<Response>(id: "getWeather", tag: "weather", method: "GET", path: "/weather", hasBody: false)
+        public static let service = APIService<Response>(id: "getThreeHourlyForecast", tag: "forecast", method: "GET", path: "/forecast", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: []))
 
         public final class Request: APIRequest<Response> {
 
@@ -36,13 +36,17 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 /** You can use lang parameter to get the output in your language. */
                 public var lang: String?
 
-                public init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
+                /** To limit number of listed cities please setup 'cnt' parameter that specifies the number of lines returned. */
+                public var cnt: Int?
+
+                public init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
                     self.q = q
                     self.id = id
                     self.lat = lat
                     self.lon = lon
                     self.zip = zip
                     self.lang = lang
+                    self.cnt = cnt
                 }
             }
 
@@ -50,12 +54,12 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
 
             public init(options: Options) {
                 self.options = options
-                super.init(service: GetWeather.service)
+                super.init(service: GetThreeHourlyForecast.service)
             }
 
             /// convenience initialiser so an Option doesn't have to be created
-            public convenience init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
-                let options = Options(q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang)
+            public convenience init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
+                let options = Options(q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang, cnt: cnt)
                 self.init(options: options)
             }
 
@@ -79,6 +83,9 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 if let lang = options.lang {
                   params["lang"] = lang
                 }
+                if let cnt = options.cnt {
+                  params["cnt"] = cnt
+                }
                 return params
             }
         }
@@ -95,6 +102,9 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
             /** Not found. */
             case status404(ServiceError)
 
+            /** Service error. */
+            case defaultResponse(statusCode: Int, ServiceError)
+
             public var success: Coord? {
                 switch self {
                 case .status200(let response): return response
@@ -106,6 +116,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 switch self {
                 case .status401(let response): return response
                 case .status404(let response): return response
+                case .defaultResponse(_, let response): return response
                 default: return nil
                 }
             }
@@ -126,6 +137,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case .status200(let response): return response
                 case .status401(let response): return response
                 case .status404(let response): return response
+                case .defaultResponse(_, let response): return response
                 }
             }
 
@@ -134,6 +146,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case .status200: return 200
                 case .status401: return 401
                 case .status404: return 404
+                case .defaultResponse(let statusCode, _): return statusCode
                 }
             }
 
@@ -142,6 +155,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case .status200: return true
                 case .status401: return false
                 case .status404: return false
+                case .defaultResponse: return false
                 }
             }
 
@@ -150,7 +164,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 case 200: self = try .status200(decoder.decode(Coord.self, from: data))
                 case 401: self = try .status401(decoder.decode(ServiceError.self, from: data))
                 case 404: self = try .status404(decoder.decode(ServiceError.self, from: data))
-                default: throw APIClientError.unexpectedStatusCode(statusCode: statusCode, data: data)
+                default: self = try .defaultResponse(statusCode: statusCode, decoder.decode(ServiceError.self, from: data))
                 }
             }
 

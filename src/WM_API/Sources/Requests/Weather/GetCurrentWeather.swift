@@ -5,12 +5,12 @@
 
 import Foundation
 
-extension WMAPI.Forecast {
+extension WMAPI.Weather {
 
-    /** Hourly forecast by OpenWeatherMap! Hourly forecast for 4 days, with 96 timestamps and higher geographic accuracy. */
-    public enum GetHourlyForecast {
+    /** Get weather data based on different query */
+    public enum GetCurrentWeather {
 
-        public static let service = APIService<Response>(id: "getHourlyForecast", tag: "forecast", method: "GET", path: "/forecast/hourly", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: []))
+        public static let service = APIService<Response>(id: "getCurrentWeather", tag: "weather", method: "GET", path: "/weather", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: ["abcdefg"]))
 
         public final class Request: APIRequest<Response> {
 
@@ -36,17 +36,13 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 /** You can use lang parameter to get the output in your language. */
                 public var lang: String?
 
-                /** To limit number of listed cities please setup 'cnt' parameter that specifies the number of lines returned. */
-                public var cnt: Int?
-
-                public init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
+                public init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
                     self.q = q
                     self.id = id
                     self.lat = lat
                     self.lon = lon
                     self.zip = zip
                     self.lang = lang
-                    self.cnt = cnt
                 }
             }
 
@@ -54,12 +50,12 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
 
             public init(options: Options) {
                 self.options = options
-                super.init(service: GetHourlyForecast.service)
+                super.init(service: GetCurrentWeather.service)
             }
 
             /// convenience initialiser so an Option doesn't have to be created
-            public convenience init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
-                let options = Options(q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang, cnt: cnt)
+            public convenience init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
+                let options = Options(q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang)
                 self.init(options: options)
             }
 
@@ -82,9 +78,6 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 }
                 if let lang = options.lang {
                   params["lang"] = lang
-                }
-                if let cnt = options.cnt {
-                  params["cnt"] = cnt
                 }
                 return params
             }
