@@ -7,9 +7,9 @@ import Foundation
 
 public class HourlyForecast: ForecastSummary {
 
-    public var list: [HourlyWeathertItem]
+    public var list: [HourlyWeathertData]
 
-    public init(list: [HourlyWeathertItem], city: City? = nil, cnt: Int? = nil, cod: String? = nil, message: Double? = nil) {
+    public init(list: [HourlyWeathertData], city: City? = nil, cnt: Int? = nil, cod: String? = nil, message: Double? = nil) {
         self.list = list
         super.init(city: city, cnt: cnt, cod: cod, message: message)
     }

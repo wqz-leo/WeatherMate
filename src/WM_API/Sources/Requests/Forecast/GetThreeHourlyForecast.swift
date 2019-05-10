@@ -96,10 +96,10 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
         }
 
         public enum Response: APIResponseValue, CustomStringConvertible, CustomDebugStringConvertible {
-            public typealias SuccessType = Coord
+            public typealias SuccessType = HourlyForecast
 
             /** OK */
-            case status200(Coord)
+            case status200(HourlyForecast)
 
             /** Invalid api key. */
             case status401(ServiceError)
@@ -110,7 +110,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
             /** Service error. */
             case defaultResponse(statusCode: Int, ServiceError)
 
-            public var success: Coord? {
+            public var success: HourlyForecast? {
                 switch self {
                 case .status200(let response): return response
                 default: return nil
@@ -127,7 +127,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
             }
 
             /// either success or failure value. Success is anything in the 200..<300 status code range
-            public var responseResult: APIResponseResult<Coord, ServiceError> {
+            public var responseResult: APIResponseResult<HourlyForecast, ServiceError> {
                 if let successValue = success {
                     return .success(successValue)
                 } else if let failureValue = failure {
@@ -166,7 +166,7 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
 
             public init(statusCode: Int, data: Data, decoder: ResponseDecoder) throws {
                 switch statusCode {
-                case 200: self = try .status200(decoder.decode(Coord.self, from: data))
+                case 200: self = try .status200(decoder.decode(HourlyForecast.self, from: data))
                 case 401: self = try .status401(decoder.decode(ServiceError.self, from: data))
                 case 404: self = try .status404(decoder.decode(ServiceError.self, from: data))
                 default: self = try .defaultResponse(statusCode: statusCode, decoder.decode(ServiceError.self, from: data))

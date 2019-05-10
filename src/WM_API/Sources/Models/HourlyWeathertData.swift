@@ -5,7 +5,7 @@
 
 import Foundation
 
-public class HourlyWeathertItem: WeatherSummary {
+public class HourlyWeathertData: WeatherSummary {
 
     public var weather: [Weather]
 
@@ -34,7 +34,7 @@ public class HourlyWeathertItem: WeatherSummary {
     }
 
     override public func isEqual(to object: Any?) -> Bool {
-      guard let object = object as? HourlyWeathertItem else { return false }
+      guard let object = object as? HourlyWeathertData else { return false }
       guard self.weather == object.weather else { return false }
       guard self.main == object.main else { return false }
       return super.isEqual(to: object)

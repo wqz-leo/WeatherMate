@@ -155,10 +155,10 @@ To add support for a specific asynchronous library, just add an extension on `AP
 - **Coord**
 - **CurrentWeather**
 - **DailyForecast**
-- **DailyWeathertItem**
+- **DailyWeathertData**
 - **ForecastSummary**
 - **HourlyForecast**
-- **HourlyWeathertItem**
+- **HourlyWeathertData**
 - **Main**
 - **Rain**
 - **ServiceError**

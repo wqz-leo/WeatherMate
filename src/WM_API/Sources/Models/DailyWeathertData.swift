@@ -5,7 +5,7 @@
 
 import Foundation
 
-public class DailyWeathertItem: APIModel {
+public class DailyWeathertData: APIModel {
 
     /** Cloudiness, % */
     public var clouds: Double?
@@ -74,7 +74,7 @@ public class DailyWeathertItem: APIModel {
     }
 
     public func isEqual(to object: Any?) -> Bool {
-      guard let object = object as? DailyWeathertItem else { return false }
+      guard let object = object as? DailyWeathertData else { return false }
       guard self.clouds == object.clouds else { return false }
       guard self.deg == object.deg else { return false }
       guard self.dt == object.dt else { return false }
@@ -87,7 +87,7 @@ public class DailyWeathertItem: APIModel {
       return true
     }
 
-    public static func == (lhs: DailyWeathertItem, rhs: DailyWeathertItem) -> Bool {
+    public static func == (lhs: DailyWeathertData, rhs: DailyWeathertData) -> Bool {
         return lhs.isEqual(to: rhs)
     }
 }
