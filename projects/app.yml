@@ -16,3 +16,11 @@ targets:
     dependencies:
       - target: WM_SDK
       - target: WM_API
+    # prebuildScripts:
+    #   - name: SwiftGen
+    #     script: scripts/swiftgen.sh WeatherMate
+    postbuildScripts:
+      - name: Format Code
+        script: scripts/format-code.sh src/WeatherMate
+      - name: Reveal
+        script: scripts/reveal.sh

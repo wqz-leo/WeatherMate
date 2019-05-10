@@ -3,6 +3,9 @@ targets:
     sources: ../src/WM_SDK
     platform: iOS
     type: framework
+    postbuildScripts:
+      - name: Format Code
+        script: scripts/format-code.sh src/WM_SDK
   WM_API:
     sources: ../src/WM_API
     platform: iOS

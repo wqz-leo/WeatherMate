@@ -1,0 +1,26 @@
+disabled_rules:
+  - type_name
+  - identifier_name
+  - line_length
+  - todo
+  - cyclomatic_complexity
+  - trailing_comma
+  - operator_whitespace
+  - file_length
+  - type_body_length
+  - function_body_length
+  - nesting
+  - unused_closure_parameter
+  - large_tuple
+  - multiple_closures_with_trailing_closure
+  - private_over_fileprivate
+excluded:
+  - Carthage
+  - src/WM_API
+  # - Axis_iOS/Assets/SwiftGen
+  # - Axis_tvOS/Assets/SwiftGen
+  # - Axis_UI/Assets
+opt_in_rules:
+  - trailing_closure
+force_cast: warning
+force_try: warning

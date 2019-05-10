@@ -15,4 +15,4 @@ FOUNDATION_EXPORT double Axis_SDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char Axis_SDKVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Axis_SDK_iOS/PublicHeader.h>
-//@import API;
+@import WM_API;
