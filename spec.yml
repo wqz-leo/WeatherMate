@@ -19,6 +19,7 @@ paths:
       tags:
         - weather
       parameters:
+        - $ref: "#/components/parameters/AppId"
         - name: bbox
           in: query
           description: bounding box [lon-left,lat-bottom,lon-right,lat-top,zoom]
@@ -52,8 +53,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
-      security:
-        - apiKey: []
   /forecast:
     get:
       operationId: getThreeHourlyForecast
@@ -61,6 +60,7 @@ paths:
       tags:
         - forecast
       parameters:
+        - $ref: "#/components/parameters/AppId"
         - $ref: "#/components/parameters/CityName"
         - $ref: "#/components/parameters/CityID"
         - $ref: "#/components/parameters/Latitude"
@@ -93,8 +93,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
-      security:
-        - apiKey: []
   /forecast/hourly:
     get:
       operationId: getHourlyForecast
@@ -102,6 +100,7 @@ paths:
       tags:
         - forecast
       parameters:
+        - $ref: "#/components/parameters/AppId"
         - $ref: "#/components/parameters/CityName"
         - $ref: "#/components/parameters/CityID"
         - $ref: "#/components/parameters/Latitude"
@@ -134,8 +133,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
-      security:
-        - apiKey: []
   /forecast/daily:
     get:
       operationId: getDailyForecast
@@ -143,6 +140,7 @@ paths:
       tags:
         - forecast
       parameters:
+        - $ref: "#/components/parameters/AppId"
         - $ref: "#/components/parameters/CityName"
         - $ref: "#/components/parameters/CityID"
         - $ref: "#/components/parameters/Latitude"
@@ -175,8 +173,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
-      security:
-        - apiKey: []
   /weather:
     get:
       operationId: getCurrentWeather
@@ -184,6 +180,7 @@ paths:
       tags:
         - weather
       parameters:
+        - $ref: "#/components/parameters/AppId"
         - $ref: "#/components/parameters/CityName"
         - $ref: "#/components/parameters/CityID"
         - $ref: "#/components/parameters/Latitude"
@@ -215,8 +212,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
-      security:
-        - apiKey: ["abcdefg"]
 servers:
   - url: https://api.openweathermap.org/data/2.5
     name: data
@@ -234,11 +229,18 @@ servers:
   #   description: Weather map
 components:
   securitySchemes:
-    apiKey:
+    appId:
       type: apiKey
-      name: apiKey
+      name: app_id
       in: query
   parameters:
+    AppId:
+      name: appid
+      description: API key
+      in: query
+      required: true
+      schema:
+        type: string
     CityName:
       name: q
       description: city name and country code divided by comma, use ISO 3166 country codes

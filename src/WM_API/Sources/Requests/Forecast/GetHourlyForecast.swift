@@ -10,11 +10,14 @@ extension WMAPI.Forecast {
     /** Hourly forecast by OpenWeatherMap! Hourly forecast for 4 days, with 96 timestamps and higher geographic accuracy. */
     public enum GetHourlyForecast {
 
-        public static let service = APIService<Response>(id: "getHourlyForecast", tag: "forecast", method: "GET", path: "/forecast/hourly", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: []))
+        public static let service = APIService<Response>(id: "getHourlyForecast", tag: "forecast", method: "GET", path: "/forecast/hourly", hasBody: false)
 
         public final class Request: APIRequest<Response> {
 
             public struct Options {
+
+                /** API key */
+                public var appid: String
 
                 /** city name and country code divided by comma, use ISO 3166 country codes */
                 public var q: String?
@@ -39,7 +42,8 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 /** To limit number of listed cities please setup 'cnt' parameter that specifies the number of lines returned. */
                 public var cnt: Int?
 
-                public init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
+                public init(appid: String, q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
+                    self.appid = appid
                     self.q = q
                     self.id = id
                     self.lat = lat
@@ -58,13 +62,14 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
             }
 
             /// convenience initialiser so an Option doesn't have to be created
-            public convenience init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
-                let options = Options(q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang, cnt: cnt)
+            public convenience init(appid: String, q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil, cnt: Int? = nil) {
+                let options = Options(appid: appid, q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang, cnt: cnt)
                 self.init(options: options)
             }
 
             public override var queryParameters: [String: Any] {
                 var params: [String: Any] = [:]
+                params["appid"] = options.appid
                 if let q = options.q {
                   params["q"] = q
                 }

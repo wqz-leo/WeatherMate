@@ -10,11 +10,14 @@ extension WMAPI.Weather {
     /** Get weather data based on different query */
     public enum GetCurrentWeather {
 
-        public static let service = APIService<Response>(id: "getCurrentWeather", tag: "weather", method: "GET", path: "/weather", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: ["abcdefg"]))
+        public static let service = APIService<Response>(id: "getCurrentWeather", tag: "weather", method: "GET", path: "/weather", hasBody: false)
 
         public final class Request: APIRequest<Response> {
 
             public struct Options {
+
+                /** API key */
+                public var appid: String
 
                 /** city name and country code divided by comma, use ISO 3166 country codes */
                 public var q: String?
@@ -36,7 +39,8 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
                 /** You can use lang parameter to get the output in your language. */
                 public var lang: String?
 
-                public init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
+                public init(appid: String, q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
+                    self.appid = appid
                     self.q = q
                     self.id = id
                     self.lat = lat
@@ -54,13 +58,14 @@ List of city ID city.list.json.gz can be downloaded here http://bulk.openweather
             }
 
             /// convenience initialiser so an Option doesn't have to be created
-            public convenience init(q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
-                let options = Options(q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang)
+            public convenience init(appid: String, q: String? = nil, id: String? = nil, lat: String? = nil, lon: String? = nil, zip: String? = nil, lang: String? = nil) {
+                let options = Options(appid: appid, q: q, id: id, lat: lat, lon: lon, zip: zip, lang: lang)
                 self.init(options: options)
             }
 
             public override var queryParameters: [String: Any] {
                 var params: [String: Any] = [:]
+                params["appid"] = options.appid
                 if let q = options.q {
                   params["q"] = q
                 }

@@ -10,16 +10,20 @@ extension WMAPI.Weather {
     /** JSON returns the data from cities within the defined rectangle specified by the geographic coordinates. */
     public enum GetWeatherInRectZone {
 
-        public static let service = APIService<Response>(id: "getWeatherInRectZone", tag: "weather", method: "GET", path: "/box/city", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: []))
+        public static let service = APIService<Response>(id: "getWeatherInRectZone", tag: "weather", method: "GET", path: "/box/city", hasBody: false)
 
         public final class Request: APIRequest<Response> {
 
             public struct Options {
 
+                /** API key */
+                public var appid: String
+
                 /** bounding box [lon-left,lat-bottom,lon-right,lat-top,zoom] */
                 public var bbox: [Int]?
 
-                public init(bbox: [Int]? = nil) {
+                public init(appid: String, bbox: [Int]? = nil) {
+                    self.appid = appid
                     self.bbox = bbox
                 }
             }
@@ -32,13 +36,14 @@ extension WMAPI.Weather {
             }
 
             /// convenience initialiser so an Option doesn't have to be created
-            public convenience init(bbox: [Int]? = nil) {
-                let options = Options(bbox: bbox)
+            public convenience init(appid: String, bbox: [Int]? = nil) {
+                let options = Options(appid: appid, bbox: bbox)
                 self.init(options: options)
             }
 
             public override var queryParameters: [String: Any] {
                 var params: [String: Any] = [:]
+                params["appid"] = options.appid
                 if let bbox = options.bbox?.map({ String(describing: $0) }).joined(separator: ",") {
                   params["bbox"] = bbox
                 }
