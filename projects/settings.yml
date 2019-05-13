@@ -1,10 +1,10 @@
 name: WeatherMate
-settingsGroup:
+settingGroups:
   app:
     base:
       APP_NAME: WeatherMate
       PRODUCT_BUNDLE_IDENTIFIER: co.leo.wang.weather_mate
-      #DEVELOPMENT_TEAM: 77PYHN5987
+      DEVELOPMENT_TEAM: C5745B5785
       APP_GROUP: group.co.leo.wang
       CODE_SIGN_STYLE: Automatic
 options:

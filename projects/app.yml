@@ -12,7 +12,7 @@ targets:
     settings:
       base:
         FRAMEWORK_SEARCH_PATHS: $(PROJECT_DIR)
-      group: [app]
+      groups: [app]
     dependencies:
       - target: WM_SDK
       - target: WM_API
