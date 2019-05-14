@@ -10,4 +10,6 @@ settingGroups:
 options:
    bundleIdPrefix: co.leo.wang
    carthageExecutablePath: ./mint run carthage carthage
-   deploymentTarget: 10.0
+   deploymentTarget:
+    iOS: 10.0
+    tvOS: 10.0
