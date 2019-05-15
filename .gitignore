@@ -13,3 +13,6 @@ DerivedData
 # Dependencies
 Carthage/*
 src/WM_API/.build/*
+
+# Credential
+src/WM_SDK/Asset/APIKey.plist
