@@ -15,9 +15,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
 
-        let request = WMAPI.Weather.GetCurrentWeather.Request(id: "2172797")
-        APIClient.default.makeRequest(request) { response in
-            print(response)
-        }
+//        let request = WMAPI.Weather.GetCurrentWeather.Request(id: "2172797")
+//        APIClient.default.makeRequest(request) { response in
+//            print(response)
+//        }
     }
 }
