@@ -10,7 +10,7 @@ extension WMAPI.Weather {
     /** Get weather data based on different query */
     public enum GetCurrentWeather {
 
-        public static let service = APIService<Response>(id: "getCurrentWeather", tag: "weather", method: "GET", path: "/weather", hasBody: false)
+        public static let service = APIService<Response>(id: "getCurrentWeather", tag: "weather", method: "GET", path: "/weather", hasBody: false, securityRequirement: SecurityRequirement(type: "apiKey", scopes: []))
 
         public final class Request: APIRequest<Response> {
 

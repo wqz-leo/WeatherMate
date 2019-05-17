@@ -212,6 +212,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ServiceError"
+      security:
+        - apiKey:
+          - type: apiKey
+            name: appid
+            in: query
 servers:
   - url: https://api.openweathermap.org/data/2.5
     name: data
@@ -228,11 +233,11 @@ servers:
   # - url: maps.openweathermap.org/maps
   #   description: Weather map
 components:
-  securitySchemes:
-    appId:
-      type: apiKey
-      name: app_id
-      in: query
+  # securitySchemes:
+  #   appId:
+  #     type: apiKey
+  #     name: app_id
+  #     in: query
   parameters:
     AppId:
       name: appid
