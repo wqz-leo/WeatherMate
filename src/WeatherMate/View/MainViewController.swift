@@ -9,15 +9,10 @@
 import UIKit
 import WM_API
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-
-//        let request = WMAPI.Weather.GetCurrentWeather.Request(id: "2172797")
-//        APIClient.default.makeRequest(request) { response in
-//            print(response)
-//        }
     }
 }
