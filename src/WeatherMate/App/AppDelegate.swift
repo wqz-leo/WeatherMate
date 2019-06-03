@@ -9,12 +9,19 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UIGestureRecognizerDelegate {
 
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Override point for customization after application launch.app
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        window?.rootViewController = MainViewController()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        tapGesture.delegate = self
+        window?.addGestureRecognizer(tapGesture)
         return true
     }
 
