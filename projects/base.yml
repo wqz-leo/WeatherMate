@@ -5,6 +5,7 @@ targets:
     type: framework
     dependencies:
       - target: WM_API
+      - carthage: Swiftstraints
     postbuildScripts:
       - name: Format Code
         script: scripts/format-code.sh src/WM_SDK

@@ -1,3 +1,6 @@
 # WM API
 
 github "Alamofire/Alamofire"
+
+# WM SDK
+github "Skyvive/Swiftstraints"
