@@ -1,4 +1,7 @@
 name: WeatherMate
+settings:
+  OTHER_SWIFT_FLAGS: $(inherited) -Xfrontend -warn-long-expression-type-checking=500 -Xfrontend -warn-long-function-bodies=500
+  CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES # Silence project warning
 settingGroups:
   app:
     base:
