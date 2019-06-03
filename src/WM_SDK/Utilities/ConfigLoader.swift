@@ -5,7 +5,7 @@
 //  Created by Qingzhou Wang on 15/5/19.
 //
 
-import UIKit
+import Foundation
 
 public typealias JSONDictionary = [String: Any?]
 

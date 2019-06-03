@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import WM_API
+import WM_SDK
 
 class MainViewController: UIViewController {
 
